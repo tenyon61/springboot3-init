@@ -12,9 +12,9 @@ server:
 spring:
   application:
     name: springboot-init
-  # 默认 dev 环境
+  # 默认 local 环境
   profiles:
-    active: dev
+    active: local
   # 支持 swagger3
   mvc:
     pathmatch:

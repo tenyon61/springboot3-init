@@ -1,5 +1,6 @@
 #----- ayfox -----
 application-local.yml
+.rebel.xml
 #----- ayfox -----
 HELP.md
 .gradle
