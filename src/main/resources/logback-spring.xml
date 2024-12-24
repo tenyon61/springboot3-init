@@ -1,45 +1,49 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration scan="true" scanPeriod="10 minutes">
+    <!--  控制台输出  -->
     <appender name="stdot" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>%d{yyyy-MM-dd HH:mm:ss,GMT+8} [%p][%c][%M][%L]-> %m%n</pattern>
         </layout>
     </appender>
 
-    <springProperty scope="context" name="log.path" source="project.folder"/>
-    <springProperty scope="context" name="log.root.level" source="log.root.level"/>
-    <springProperty scope="context" name="appname" source="spring.application.name"/>
+    <springProperty name="log.path" scope="context" source="log.folder"/>
+    <springProperty name="log.root.level" scope="context" source="log.root.level"/>
+    <springProperty name="appname" scope="context" source="spring.application.name"/>
 
     <property name="LOG_FOLDER" value="logs"/>
 
+    <!-- 使用 SizeAndTimeBasedRollingPolicy 滚动策略 -->
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/${LOG_FOLDER}/${appname}.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <FileNamePattern>${log.path}/${LOG_FOLDER}/${appname}.%d{yyyyMMdd}.%i</FileNamePattern>
             <cleanHistoryOnStart>true</cleanHistoryOnStart>
-            <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <MaxFileSize>20MB</MaxFileSize>
-            </TimeBasedFileNamingAndTriggeringPolicy>
+            <!-- 每个日志文件的最大大小 -->
+            <MaxFileSize>20MB</MaxFileSize>
+            <!-- 保留最多15天的日志 -->
             <maxHistory>15</maxHistory>
+            <!-- 总日志文件大小限制 -->
+            <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
+        <!-- 设置日志编码和格式 -->
         <encoder>
             <charset>utf-8</charset>
             <pattern>%d{yyyy-MM-dd HH:mm:ss,GMT+8} [%p][%c][%M][%L]-> %m%n</pattern>
         </encoder>
-        <append>false</append>
+        <!-- 设置为 true 以追加日志到文件 -->
+        <append>true</append>
+        <!-- 不需要启用文件写入时的审慎模式 -->
         <prudent>false</prudent>
     </appender>
 
-    <logger name="org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener"
-            level="error"></logger>
-    <logger name="org.apache.http.impl.conn.PoolingHttpClientConnectionManager" level="warn"></logger>
-    <logger name="org.redisson.connection.DNSMonitor" level="error"></logger>
-    <logger name="com.zaxxer.hikari" level="info"></logger>
-    <logger name="io.lettuce.core" level="info"></logger>
-    <logger name="org.springframework.data.redis" level="info"></logger>
+    <!-- 日志级别别名定义 -->
+    <logger name="org.springframework.web" level="debug"/>
+    <logger name="org.hibernate" level="warn"/>
+
     <root level="${log.root.level}">
         <appender-ref ref="stdot"/>
         <appender-ref ref="file"/>
     </root>
-    <!-- trace debug info warn error fatal-->
+    <!-- TRACE DEBUG INFO WARN ERROR FATAL-->
 </configuration>

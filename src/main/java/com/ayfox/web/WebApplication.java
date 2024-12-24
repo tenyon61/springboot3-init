@@ -1,6 +1,7 @@
 package com.ayfox.web;
 
 import io.micrometer.common.util.StringUtils;
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -10,13 +11,16 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+// 如需开启 Redis，须移除 exclude = {RedisAutoConfiguration.class}
 @SpringBootApplication
+@MapperScan("com.ayfox.web.mapper")
 @EnableScheduling
-//@EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
+@EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 public class WebApplication {
 
 	public static void main(String[] args) throws UnknownHostException {
