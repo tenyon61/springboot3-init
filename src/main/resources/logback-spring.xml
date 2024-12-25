@@ -8,7 +8,7 @@
         </filter>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <!-- 日期和时间 [日志级别][记录器名称][方法名][行号] [...颜色...]-> 日志消息-->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss,GMT+8} [%cyan(%thread)] [%highlight(%-5level)] [%green(%logger{56})] [%p][%c][%M][%L]-> %m%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss,GMT+8} [%cyan(%thread)] [%highlight(%-5level)] [%green(%logger{56})] [%L]-> %m%n</pattern>
         </layout>
     </appender>
 
