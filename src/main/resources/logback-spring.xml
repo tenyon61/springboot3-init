@@ -22,12 +22,12 @@
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/${LOG_FOLDER}/${appname}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <FileNamePattern>${log.path}/${LOG_FOLDER}/${appname}.%d{yyyyMMdd}.%i</FileNamePattern>
+            <FileNamePattern>${log.path}/${LOG_FOLDER}/${appname}.%d{yyyyMMdd}.%i.log</FileNamePattern>
             <cleanHistoryOnStart>true</cleanHistoryOnStart>
             <!-- 每个日志文件的最大大小 -->
             <MaxFileSize>20MB</MaxFileSize>
-            <!-- 保留最多15天的日志 -->
-            <maxHistory>15</maxHistory>
+            <!-- 保留最多7天的日志 -->
+            <maxHistory>7</maxHistory>
             <!-- 总日志文件大小限制 -->
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
