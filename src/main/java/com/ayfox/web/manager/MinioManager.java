@@ -31,7 +31,7 @@ public class MinioManager {
     // region minio附件
 
     /**
-     * 上传对象
+     * 上传对象（图片等小文件）
      *
      * @param key  user_avatar/5/fGap1Lpj-default.png
      * @param file
@@ -54,7 +54,7 @@ public class MinioManager {
      * @param fileName
      * @param contentType
      */
-    public void uploadObject(InputStream is, String fileName, String contentType) {
+    public void putObject(InputStream is, String fileName, String contentType) {
         try {
             PutObjectArgs putObjectArgs = PutObjectArgs.builder().bucket(minioClientConfig.getBucket()).object(fileName).contentType(contentType).stream(is, is.available(), -1).build();
             minioClient.putObject(putObjectArgs);
@@ -144,20 +144,4 @@ public class MinioManager {
     }
     // endregion
 
-    /**
-     * 上传对象（附带图片信息）
-     *
-     * @param key  唯一键 user_avatar/5/fGap1Lpj-default.png
-     * @param file 文件
-     */
-    public ObjectWriteResponse putPictureObject(String key, File file) {
-        ObjectWriteResponse objectWriteResponse;
-        try {
-            UploadObjectArgs args = UploadObjectArgs.builder().bucket(minioClientConfig.getBucket()).object(key).filename(file.getAbsolutePath()).build();
-            objectWriteResponse = minioClient.uploadObject(args);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return objectWriteResponse;
-    }
 }

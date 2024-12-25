@@ -54,7 +54,7 @@ public class FileManager {
             // 上传文件
             file = File.createTempFile(uploadPath, null);
             multipartFile.transferTo(file);
-            minioManager.putPictureObject(uploadPath, file);
+            minioManager.uploadObject(uploadPath, file);
             // 获取图片信息对象
             InputStream ins = minioManager.getObject(uploadPath);
             BufferedImage image = ImageIO.read(ins);
