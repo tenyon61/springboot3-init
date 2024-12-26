@@ -25,6 +25,45 @@ public class RedisManager<V> {
     private RedisTemplate<String, V> redisTemplate;
 
     /**
+     * 普通缓存放入并设置时间
+     *
+     * @param key
+     * @param value
+     * @param expired  ms
+     * @return
+     */
+    public boolean setex(String key, V value, long expired) {
+        try {
+            if (expired > 0) {
+                redisTemplate.opsForValue().set(key, value, expired, TimeUnit.MILLISECONDS);
+            } else {
+                set(key, value);
+            }
+            return true;
+        } catch (Exception e) {
+            logger.error("设置redisKey:{},value:{}失败", key, value);
+            return false;
+        }
+    }
+
+    /**
+     * 普通缓存放入
+     *
+     * @param key
+     * @param value
+     * @return
+     */
+    public boolean set(String key, V value) {
+        try {
+            redisTemplate.opsForValue().set(key, value);
+            return true;
+        } catch (Exception e) {
+            logger.error("设置redisKey:{},value:{}失败", key, value);
+            return false;
+        }
+    }
+
+    /**
      * 删除缓存
      *
      * @param key 可以传一个值 或多个
@@ -39,84 +78,13 @@ public class RedisManager<V> {
         }
     }
 
-    public V get(String key) {
-        return key == null ? null : redisTemplate.opsForValue().get(key);
-    }
-
     /**
-     * 普通缓存放入
+     * 从列表中移除指定的值，移除的数量为 1
      *
-     * @param key   键
-     * @param value 值
-     * @return true成功 false失败
+     * @param key
+     * @param value
+     * @return
      */
-    public boolean set(String key, V value) {
-        try {
-            redisTemplate.opsForValue().set(key, value);
-            return true;
-        } catch (Exception e) {
-            logger.error("设置redisKey:{},value:{}失败", key, value);
-            return false;
-        }
-    }
-
-    public boolean keyExists(String key) {
-        return redisTemplate.hasKey(key);
-    }
-
-    /**
-     * 普通缓存放入并设置时间
-     *
-     * @param key   键
-     * @param value 值
-     * @param time  时间(秒) time要大于0 如果time小于等于0 将设置无限期
-     * @return true成功 false 失败
-     */
-    public boolean setex(String key, V value, long time) {
-        try {
-            if (time > 0) {
-                redisTemplate.opsForValue().set(key, value, time, TimeUnit.MILLISECONDS);
-            } else {
-                set(key, value);
-            }
-            return true;
-        } catch (Exception e) {
-            logger.error("设置redisKey:{},value:{}失败", key, value);
-            return false;
-        }
-    }
-
-    public boolean expire(String key, long time) {
-        try {
-            if (time > 0) {
-                redisTemplate.expire(key, time, TimeUnit.MILLISECONDS);
-            }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-
-    public List<V> getQueueList(String key) {
-        return redisTemplate.opsForList().range(key, 0, -1);
-    }
-
-
-    public boolean lpush(String key, V value, Long time) {
-        try {
-            redisTemplate.opsForList().leftPush(key, value);
-            if (time != null && time > 0) {
-                expire(key, time);
-            }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     public long remove(String key, Object value) {
         try {
             Long remove = redisTemplate.opsForList().remove(key, 1, value);
@@ -127,11 +95,39 @@ public class RedisManager<V> {
         }
     }
 
-    public boolean lpushAll(String key, List<V> values, long time) {
+    /**
+     * 根据 key获取 value
+     *
+     * @param key
+     * @return
+     */
+    public V get(String key) {
+        return key == null ? null : redisTemplate.opsForValue().get(key);
+    }
+
+    /**
+     * 获取列表类型键的所有元素
+     *
+     * @param key
+     * @return
+     */
+    public List<V> getQueueList(String key) {
+        return redisTemplate.opsForList().range(key, 0, -1);
+    }
+
+    /**
+     * 将一个值插入到列表的左边（头部）。如果指定了过期时间，则设置过期时间
+     *
+     * @param key
+     * @param value
+     * @param expired ms
+     * @return
+     */
+    public boolean lpush(String key, V value, Long expired) {
         try {
-            redisTemplate.opsForList().leftPushAll(key, values);
-            if (time > 0) {
-                expire(key, time);
+            redisTemplate.opsForList().leftPush(key, value);
+            if (expired != null && expired > 0) {
+                expire(key, expired);
             }
             return true;
         } catch (Exception e) {
@@ -140,6 +136,33 @@ public class RedisManager<V> {
         }
     }
 
+    /**
+     * 将多个值插入到列表的左边（头部）。如果指定了过期时间，则设置过期时间
+     *
+     * @param key
+     * @param values
+     * @param expired ms
+     * @return
+     */
+    public boolean lpushAll(String key, List<V> values, long expired) {
+        try {
+            redisTemplate.opsForList().leftPushAll(key, values);
+            if (expired > 0) {
+                expire(key, expired);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 从列表的右边（尾部）弹出一个值
+     *
+     * @param key
+     * @return
+     */
     public V rpop(String key) {
         try {
             return redisTemplate.opsForList().rightPop(key);
@@ -149,36 +172,33 @@ public class RedisManager<V> {
         }
     }
 
-    public Long increment(String key) {
-        Long count = redisTemplate.opsForValue().increment(key, 1);
-        return count;
+    /**
+     * key是否存在
+     *
+     * @param key
+     * @return
+     */
+    public boolean keyExists(String key) {
+        return redisTemplate.hasKey(key);
     }
 
-    public Long incrementex(String key, long milliseconds) {
-        Long count = redisTemplate.opsForValue().increment(key, 1);
-        if (count == 1) {
-            //设置过期时间1天
-            expire(key, milliseconds);
-        }
-        return count;
-    }
-
-    public Long decrement(String key) {
-        Long count = redisTemplate.opsForValue().increment(key, -1);
-        if (count <= 0) {
-            redisTemplate.delete(key);
-        }
-        logger.info("key:{},减少数量{}", key, count);
-        return count;
-    }
-
-
+    /**
+     * 根据键前缀获取所有匹配的键
+     *
+     * @param keyPrifix
+     * @return
+     */
     public Set<String> getByKeyPrefix(String keyPrifix) {
         Set<String> keyList = redisTemplate.keys(keyPrifix + "*");
         return keyList;
     }
 
-
+    /**
+     * 根据键前缀批量获取键值对
+     *
+     * @param keyPrifix
+     * @return
+     */
     public Map<String, V> getBatch(String keyPrifix) {
         Set<String> keySet = redisTemplate.keys(keyPrifix + "*");
         List<String> keyList = new ArrayList<>(keySet);
@@ -187,14 +207,23 @@ public class RedisManager<V> {
         return resultMap;
     }
 
-    public void zaddCount(String key, V v) {
-        redisTemplate.opsForZSet().incrementScore(key, v, 1);
+    /**
+     * 为指定的键设置过期时间（以毫秒为单位）
+     *
+     * @param key
+     * @param expired ms
+     * @return
+     */
+    public boolean expire(String key, long expired) {
+        try {
+            if (expired > 0) {
+                redisTemplate.expire(key, expired, TimeUnit.MILLISECONDS);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
-
-    public List<V> getZSetList(String key, Integer count) {
-        Set<V> topElements = redisTemplate.opsForZSet().reverseRange(key, 0, count);
-        List<V> list = new ArrayList<>(topElements);
-        return list;
-    }
 }
