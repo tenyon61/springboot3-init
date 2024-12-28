@@ -1,4 +1,4 @@
-package com.ayfox.web.config;
+package com.ayfox.web.cache;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +16,8 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  * @date 2024/11/22
  */
 @Configuration
-public class RedisConfig<V> {
-    private static final Logger logger = LoggerFactory.getLogger(RedisConfig.class);
+public class RedisCache<V> {
+    private static final Logger logger = LoggerFactory.getLogger(RedisCache.class);
 
 
     @Bean("redisTemplate")

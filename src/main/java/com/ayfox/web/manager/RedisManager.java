@@ -35,7 +35,7 @@ public class RedisManager<V> {
     public boolean setex(String key, V value, long expired) {
         try {
             if (expired > 0) {
-                redisTemplate.opsForValue().set(key, value, expired, TimeUnit.MILLISECONDS);
+                redisTemplate.opsForValue().set(key, value, expired, TimeUnit.SECONDS);
             } else {
                 set(key, value);
             }
@@ -120,7 +120,7 @@ public class RedisManager<V> {
      *
      * @param key
      * @param value
-     * @param expired ms
+     * @param expired s
      * @return
      */
     public boolean lpush(String key, V value, Long expired) {
@@ -141,7 +141,7 @@ public class RedisManager<V> {
      *
      * @param key
      * @param values
-     * @param expired ms
+     * @param expired s
      * @return
      */
     public boolean lpushAll(String key, List<V> values, long expired) {
@@ -211,13 +211,13 @@ public class RedisManager<V> {
      * 为指定的键设置过期时间（以毫秒为单位）
      *
      * @param key
-     * @param expired ms
+     * @param expired s
      * @return
      */
     public boolean expire(String key, long expired) {
         try {
             if (expired > 0) {
-                redisTemplate.expire(key, expired, TimeUnit.MILLISECONDS);
+                redisTemplate.expire(key, expired, TimeUnit.SECONDS);
             }
             return true;
         } catch (Exception e) {

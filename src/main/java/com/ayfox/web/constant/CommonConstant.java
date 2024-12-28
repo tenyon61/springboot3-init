@@ -51,18 +51,13 @@ public interface CommonConstant {
     String REGEX_PASSWORD = "^(?=.*\\d)(?=.*[a-zA-Z])[\\da-zA-Z~!@#$^&*_.]{8,18}$";
 
     /**
-     * 1分钟的过期时间 ms
+     * 1分钟的过期时间 s
      */
-    Integer EXPIRES_ONE_MIN = 60000;
-
-    /**
-     * 1天过期时间 ms
-     */
-    Integer EXPIRES_ONE_DAY = EXPIRES_ONE_MIN * 60 * 24;
+    Long EXPIRES_ONE_MIN = 60L;
 
     /**
      * 1天过期时间 s
      */
-    Integer TIME_SECONDS_DAY = EXPIRES_ONE_DAY / 1000;
+    Long EXPIRES_ONE_DAY = EXPIRES_ONE_MIN * 60 * 24;
 
 }
