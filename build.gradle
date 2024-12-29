@@ -59,8 +59,11 @@ dependencies {
     implementation("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter:${knife4jVersion}")
     // Sa-Token 整合 Redis （使用 jackson 序列化方式）
     implementation("cn.dev33:sa-token-spring-boot3-starter:${satokenVersion}")
-    implementation("cn.dev33:sa-token-redis-jackson:${satokenVersion}")
+    implementation("cn.dev33:sa-token-redis-jackson:${satokenVersion}"){
+        exclude(group: "io.lettuce", module: "lettuce-core")
+    }
     implementation("org.apache.commons:commons-pool2")
+    implementation 'redis.clients:jedis'
     // Minio
     implementation("io.minio:minio:${minioVersion}")
     // Cos

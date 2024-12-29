@@ -11,7 +11,7 @@ server:
         path: "/api"
 spring:
   application:
-    name: springboot-init
+    name: springboot3-init
   # 默认 local 环境
   profiles:
     active: local
@@ -26,8 +26,6 @@ spring:
       matching-strategy: ant_path_matcher
   # session 配置
   session:
-    # store-type: redis
-    # 30 天过期
     timeout: 2592000
   # 数据库配置
   datasource:
@@ -50,7 +48,7 @@ spring:
       host: ${spring.datasource.host}
       port: 6379
       password: ${spring.datasource.password}
-      lettuce:
+      jedis:
         pool:
           max-wait: -1
           max-idle: 5
