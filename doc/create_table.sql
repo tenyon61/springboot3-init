@@ -11,7 +11,7 @@
  Target Server Version : 80039 (8.0.39)
  File Encoding         : 65001
 
- Date: 04/01/2025 14:34:03
+ Date: 04/01/2025 15:33:14
 */
 
 SET NAMES utf8mb4;
@@ -56,7 +56,7 @@ CREATE TABLE `post_favour`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX        `idx_postId`(`postId` ASC) USING BTREE,
     INDEX        `idx_userId`(`userId` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '帖子收藏' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '帖子收藏' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of post_favour
@@ -76,10 +76,70 @@ CREATE TABLE `post_thumb`
     PRIMARY KEY (`id`) USING BTREE,
     INDEX        `idx_postId`(`postId` ASC) USING BTREE,
     INDEX        `idx_userId`(`userId` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '帖子点赞' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '帖子点赞' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of post_thumb
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for sys_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_permission`;
+CREATE TABLE `sys_permission`
+(
+    `id`          bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `key`         varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '资源路径',
+    `name`        varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
+    `description` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '资源表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_permission
+-- ----------------------------
+INSERT INTO `sys_permission`
+VALUES (1, '/console', 'console', '后台管理');
+INSERT INTO `sys_permission`
+VALUES (2, '/space', 'space', '空间管理');
+
+-- ----------------------------
+-- Table structure for sys_role
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_role`;
+CREATE TABLE `sys_role`
+(
+    `id`          bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `name`        varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '角色名称',
+    `description` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '备注',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '角色表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_role
+-- ----------------------------
+INSERT INTO `sys_role`
+VALUES (1, 'admin', '系统管理员');
+INSERT INTO `sys_role`
+VALUES (2, 'user', '普通用户');
+INSERT INTO `sys_role`
+VALUES (3, 'vip', '会员');
+INSERT INTO `sys_role`
+VALUES (4, 'svip', '超级会员');
+
+-- ----------------------------
+-- Table structure for sys_role_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_role_permission`;
+CREATE TABLE `sys_role_permission`
+(
+    `roleId`       bigint NOT NULL COMMENT '角色ID',
+    `permissionId` bigint NOT NULL COMMENT '资源ID',
+    UNIQUE INDEX `uk_roleId_permissionId`(`roleId` ASC, `permissionId` ASC) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '角色资源表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_role_permission
 -- ----------------------------
 
 -- ----------------------------
@@ -107,32 +167,32 @@ CREATE TABLE `sys_user`
     `updateTime`    datetime                                                      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `isDelete`      tinyint                                                       NOT NULL DEFAULT 0 COMMENT '是否删除',
     PRIMARY KEY (`id`) USING BTREE,
-    INDEX           `idx_unionId`(`unionId` ASC) USING BTREE
+    UNIQUE INDEX `uk_userAccount`(`userAccount` ASC) USING BTREE,
+    INDEX           `idx_userName`(`userName` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
 INSERT INTO `sys_user`
-VALUES (1, 'user1', '492a65bef0ab2fac75758f004f3eaf35', 'unionId1', 'mpOpenId1', 'user1',
-        'https://api.oss.tenyon.cn/tenyon/assets/default.png', '喜欢编程的小白', 'user', NULL, NULL, NULL, NULL, NULL,
-        '2024-11-28 14:50:35', '2024-11-28 14:50:35', '2024-11-28 14:50:35', 0);
-INSERT INTO `sys_user`
-VALUES (2, 'user2', '492a65bef0ab2fac75758f004f3eaf35', 'unionId2', 'mpOpenId2', 'user2',
-        'https://api.oss.tenyon.cn/tenyon/assets/default.png', '全栈开发工程师', 'user', NULL, NULL, NULL, NULL, NULL,
-        '2024-11-28 14:50:35', '2024-11-28 14:50:35', '2024-11-28 14:50:35', 0);
-INSERT INTO `sys_user`
-VALUES (3, 'user3', '492a65bef0ab2fac75758f004f3eaf35', 'unionId3', 'mpOpenId3', 'user3',
-        'https://api.oss.tenyon.cn/tenyon/assets/default.png', '前端爱好者', 'user', NULL, NULL, NULL, NULL, NULL,
-        '2024-11-28 14:50:35', '2024-11-28 14:50:35', '2024-11-28 14:50:35', 0);
-INSERT INTO `sys_user`
-VALUES (4, 'user4', '492a65bef0ab2fac75758f004f3eaf35', 'unionId4', 'mpOpenId4', 'user4',
-        'https://api.oss.tenyon.cn/tenyon/assets/default.png', '后端开发工程师', 'user', NULL, NULL, NULL, NULL, NULL,
-        '2024-11-28 14:50:35', '2024-11-28 14:50:35', '2024-11-28 14:50:35', 0);
-INSERT INTO `sys_user`
-VALUES (5, 'admin', '492a65bef0ab2fac75758f004f3eaf35', NULL, NULL, 'admin123',
-        'https://api.oss.tenyon.cn/tenyon/assets/default.png', '系统管理员', 'admin', NULL, NULL, NULL, NULL, NULL,
-        '2024-11-28 14:50:35', '2024-11-28 14:50:35', '2024-11-28 14:50:35', 0);
+VALUES (1, 'admin', '492a65bef0ab2fac75758f004f3eaf35', NULL, NULL, 'admin123',
+        'https://api.oss.cqbo.com/tenyon/assets/default.png', '系统管理员', 'admin', 1, '1', NULL, 'tenyon', NULL,
+        '2024-12-28 18:00:36', '2024-12-28 18:00:36', '2024-12-28 18:06:04', 0);
+
+-- ----------------------------
+-- Table structure for sys_user_role
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user_role`;
+CREATE TABLE `sys_user_role`
+(
+    `userId` bigint NOT NULL COMMENT '用户ID',
+    `roleId` bigint NOT NULL COMMENT '角色ID',
+    UNIQUE INDEX `uk_userId_roleId`(`userId` ASC, `roleId` ASC) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户角色表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_user_role
+-- ----------------------------
 
 SET
 FOREIGN_KEY_CHECKS = 1;
