@@ -11,7 +11,7 @@
  Target Server Version : 80039 (8.0.39)
  File Encoding         : 65001
 
- Date: 04/01/2025 15:33:14
+ Date: 05/01/2025 15:40:23
 */
 
 SET NAMES utf8mb4;
@@ -88,20 +88,26 @@ CREATE TABLE `post_thumb`
 DROP TABLE IF EXISTS `sys_permission`;
 CREATE TABLE `sys_permission`
 (
-    `id`          bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `key`         varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '资源路径',
-    `name`        varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
-    `description` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+    `id`         bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `parentId`   bigint NULL DEFAULT NULL COMMENT '父ID',
+    `type`       tinyint NULL DEFAULT 0 COMMENT '资源类型：0：其他 1：菜单 2：按钮',
+    `name`       varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '资源名称',
+    `remark`     varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+    `sourceType` tinyint NULL DEFAULT 1 COMMENT '源类型：1：内部 2：外部',
+    `menuSort`   int NULL DEFAULT NULL COMMENT '菜单排序',
+    `menuLevel`  int NULL DEFAULT NULL COMMENT '菜单层级 1级、2级、3级......',
+    `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updateTime` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '资源表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_permission
 -- ----------------------------
 INSERT INTO `sys_permission`
-VALUES (1, '/console', 'console', '后台管理');
+VALUES (1, NULL, NULL, 'console', '后台管理', NULL, NULL, NULL, '2025-01-04 16:36:18', '2025-01-04 16:36:18');
 INSERT INTO `sys_permission`
-VALUES (2, '/space', 'space', '空间管理');
+VALUES (2, NULL, NULL, 'space', '空间管理', NULL, NULL, NULL, '2025-01-04 16:36:18', '2025-01-04 16:36:18');
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -109,23 +115,26 @@ VALUES (2, '/space', 'space', '空间管理');
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role`
 (
-    `id`          bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `name`        varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '角色名称',
-    `description` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '备注',
+    `id`         bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `roleName`   varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '角色名称',
+    `remark`     varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+    `roleType`   tinyint NULL DEFAULT 1 COMMENT '角色类型 1内部 2外部',
+    `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updateTime` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '角色表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role`
-VALUES (1, 'admin', '系统管理员');
+VALUES (1, 'admin', '系统管理员', NULL, NULL, NULL);
 INSERT INTO `sys_role`
-VALUES (2, 'user', '普通用户');
+VALUES (2, 'user', '普通用户', NULL, NULL, NULL);
 INSERT INTO `sys_role`
-VALUES (3, 'vip', '会员');
+VALUES (3, 'spaceadmin', '空间管理员', NULL, NULL, NULL);
 INSERT INTO `sys_role`
-VALUES (4, 'svip', '超级会员');
+VALUES (4, 'vip', '会员', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_role_permission
@@ -135,12 +144,20 @@ CREATE TABLE `sys_role_permission`
 (
     `roleId`       bigint NOT NULL COMMENT '角色ID',
     `permissionId` bigint NOT NULL COMMENT '资源ID',
+    `createTime`   datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updateTime`   datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     UNIQUE INDEX `uk_roleId_permissionId`(`roleId` ASC, `permissionId` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '角色资源表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role_permission
 -- ----------------------------
+INSERT INTO `sys_role_permission`
+VALUES (1, 1, '2025-01-04 16:36:35', '2025-01-04 16:36:35');
+INSERT INTO `sys_role_permission`
+VALUES (1, 2, '2025-01-04 16:36:35', '2025-01-04 16:36:35');
+INSERT INTO `sys_role_permission`
+VALUES (3, 2, '2025-01-04 16:36:35', '2025-01-04 16:36:35');
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -167,17 +184,33 @@ CREATE TABLE `sys_user`
     `updateTime`    datetime                                                      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `isDelete`      tinyint                                                       NOT NULL DEFAULT 0 COMMENT '是否删除',
     PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE INDEX `uk_userAccount`(`userAccount` ASC) USING BTREE,
-    INDEX           `idx_userName`(`userName` ASC) USING BTREE
+    INDEX           `idx_unionId`(`unionId` ASC) USING BTREE,
+    INDEX           `uk_userAccount`(`userAccount` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
 INSERT INTO `sys_user`
-VALUES (1, 'admin', '492a65bef0ab2fac75758f004f3eaf35', NULL, NULL, 'admin123',
-        'https://api.oss.cqbo.com/tenyon/assets/default.png', '系统管理员', 'admin', 1, '1', NULL, 'tenyon', NULL,
-        '2024-12-28 18:00:36', '2024-12-28 18:00:36', '2024-12-28 18:06:04', 0);
+VALUES (1, 'user1', '492a65bef0ab2fac75758f004f3eaf35', 'unionId1', 'mpOpenId1', 'user1',
+        'https://api.oss.cqbo.com/tenyon/assets/default.png', '喜欢编程的小白', 'user', NULL, NULL, NULL, NULL, NULL,
+        '2024-11-28 14:50:35', '2024-11-28 14:50:35', '2025-01-03 19:57:48', 0);
+INSERT INTO `sys_user`
+VALUES (2, 'user2', '492a65bef0ab2fac75758f004f3eaf35', 'unionId2', 'mpOpenId2', 'user2',
+        'https://api.oss.cqbo.com/tenyon/assets/default.png', '全栈开发工程师', 'user', NULL, NULL, NULL, NULL, NULL,
+        '2024-11-28 14:50:35', '2024-11-28 14:50:35', '2025-01-03 19:57:49', 0);
+INSERT INTO `sys_user`
+VALUES (3, 'user3', '492a65bef0ab2fac75758f004f3eaf35', 'unionId3', 'mpOpenId3', 'user3',
+        'https://api.oss.cqbo.com/tenyon/assets/default.png', '前端爱好者', 'user', NULL, NULL, NULL, NULL, NULL,
+        '2024-11-28 14:50:35', '2024-11-28 14:50:35', '2025-01-03 19:57:50', 0);
+INSERT INTO `sys_user`
+VALUES (4, 'user4', '492a65bef0ab2fac75758f004f3eaf35', 'unionId4', 'mpOpenId4', 'user4',
+        'https://api.oss.cqbo.com/tenyon/assets/default.png', '后端开发工程师', 'user', NULL, NULL, NULL, NULL, NULL,
+        '2024-11-28 14:50:35', '2024-11-28 14:50:35', '2025-01-03 19:57:50', 0);
+INSERT INTO `sys_user`
+VALUES (5, 'admin', '492a65bef0ab2fac75758f004f3eaf35', NULL, NULL, 'admin123',
+        'https://api.oss.cqbo.com/tenyon/assets/default.png', '系统管理员', 'admin', NULL, NULL, NULL, NULL, NULL,
+        '2024-11-28 14:50:35', '2024-11-28 14:50:35', '2025-01-03 19:57:51', 0);
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -185,10 +218,12 @@ VALUES (1, 'admin', '492a65bef0ab2fac75758f004f3eaf35', NULL, NULL, 'admin123',
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role`
 (
-    `userId` bigint NOT NULL COMMENT '用户ID',
-    `roleId` bigint NOT NULL COMMENT '角色ID',
+    `userId`     bigint NOT NULL COMMENT '用户ID',
+    `roleId`     bigint NOT NULL COMMENT '角色ID',
+    `createTime` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updateTime` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     UNIQUE INDEX `uk_userId_roleId`(`userId` ASC, `roleId` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户角色表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user_role
