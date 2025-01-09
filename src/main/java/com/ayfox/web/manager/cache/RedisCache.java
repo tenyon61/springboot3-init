@@ -1,4 +1,4 @@
-package com.ayfox.web.common.cache;
+package com.ayfox.web.manager.cache;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
