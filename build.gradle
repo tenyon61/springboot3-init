@@ -56,7 +56,8 @@ dependencies {
     implementation("com.baomidou:mybatis-plus-spring-boot3-starter:${mybatisPlusVersion}")
     implementation("com.baomidou:mybatis-plus-jsqlparser:${mybatisPlusVersion}")
     // Knife4j
-    implementation("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter:${knife4jVersion}")
+//    implementation("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter:${knife4jVersion}")
+    implementation("com.github.xingfudeshi:knife4j-openapi3-jakarta-spring-boot-starter:4.6.0")
     // Sa-Token 整合 Redis （使用 jackson 序列化方式）
     implementation("cn.dev33:sa-token-spring-boot3-starter:${satokenVersion}")
     implementation("cn.dev33:sa-token-redis-jackson:${satokenVersion}"){

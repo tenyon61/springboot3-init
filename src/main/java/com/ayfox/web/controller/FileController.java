@@ -6,17 +6,17 @@ import cn.hutool.core.util.RandomUtil;
 import com.ayfox.web.common.BaseResponse;
 import com.ayfox.web.common.ResultUtils;
 import com.ayfox.web.config.MinioClientConfig;
-import com.ayfox.web.constant.FileConstant;
-import com.ayfox.web.exception.BusinessException;
-import com.ayfox.web.exception.ErrorCode;
+import com.ayfox.web.common.constant.FileConstant;
+import com.ayfox.web.common.exception.BusinessException;
+import com.ayfox.web.common.exception.ErrorCode;
 import com.ayfox.web.manager.MinioManager;
 import com.ayfox.web.model.dto.file.UploadFileRequest;
-import com.ayfox.web.model.entity.User;
+import com.ayfox.web.model.entity.system.User;
 import com.ayfox.web.model.enums.FileUploadBizEnum;
-import com.ayfox.web.service.UserService;
+import com.ayfox.web.service.system.AuthService;
+import com.ayfox.web.service.system.UserService;
 import io.minio.StatObjectResponse;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class FileController {
     Logger logger = LoggerFactory.getLogger(FileController.class);
 
     @Resource
-    private UserService userService;
+    private AuthService authService;
 
     @Resource
     private MinioManager minioManager;
@@ -52,18 +52,17 @@ public class FileController {
      *
      * @param multipartFile
      * @param uploadFileRequest
-     * @param request
      * @return
      */
     @PostMapping("/upload")
-    public BaseResponse<String> uploadFile(@RequestPart("file") MultipartFile multipartFile, UploadFileRequest uploadFileRequest, HttpServletRequest request) {
+    public BaseResponse<String> uploadFile(@RequestPart("file") MultipartFile multipartFile, UploadFileRequest uploadFileRequest) {
         String biz = uploadFileRequest.getBiz();
         FileUploadBizEnum fileUploadBizEnum = FileUploadBizEnum.getEnumByValue(biz);
         if (fileUploadBizEnum == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         validFile(multipartFile, fileUploadBizEnum);
-        User loginUser = userService.getLoginUser(request);
+        User loginUser = authService.getLoginUser();
         // 文件目录：根据业务、用户来划分
         String uuid = RandomUtil.randomString(8);
         String filename = uuid + "-" + multipartFile.getOriginalFilename();

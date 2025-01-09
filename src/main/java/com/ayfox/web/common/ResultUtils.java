@@ -1,6 +1,6 @@
 package com.ayfox.web.common;
 
-import com.ayfox.web.exception.ErrorCode;
+import com.ayfox.web.common.exception.ErrorCode;
 
 /**
  * 返回工具类

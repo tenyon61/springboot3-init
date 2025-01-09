@@ -1,31 +1,22 @@
 package com.ayfox.web.common;
 
-import com.ayfox.web.constant.CommonConstant;
+import com.ayfox.web.common.constant.BmsConstant;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-/**
- * 分页请求
- */
 @Data
+@Schema(description = "分页请求参数")
 public class PageRequest {
 
-    /**
-     * 当前页号
-     */
+    @Schema(description = "当前页号")
     private int current = 1;
 
-    /**
-     * 页面大小
-     */
+    @Schema(description = "页面大小")
     private int pageSize = 10;
 
-    /**
-     * 排序字段
-     */
+    @Schema(description = "排序字段")
     private String sortField;
 
-    /**
-     * 排序顺序（默认升序）
-     */
-    private String sortOrder = CommonConstant.SORT_ORDER_ASC;
+    @Schema(description = "默认升序 ascend/descend")
+    private String sortOrder = "ascend";
 }

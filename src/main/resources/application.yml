@@ -3,12 +3,12 @@ server:
   address: 0.0.0.0
   port: 8101
   servlet:
-    context-path: /api
+    context-path: /
     # cookie 30 天过期
     session:
       cookie:
         max-age: 2592000
-        path: "/api"
+        path: "/"
 spring:
   application:
     name: springboot3-init

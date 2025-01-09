@@ -1,12 +1,13 @@
 package com.ayfox.web.aop;
 
 import cn.hutool.core.util.StrUtil;
-import com.ayfox.web.annotation.AuthCheck;
-import com.ayfox.web.exception.BusinessException;
-import com.ayfox.web.exception.ErrorCode;
-import com.ayfox.web.model.entity.User;
+import com.ayfox.web.common.annotation.AuthCheck;
+import com.ayfox.web.common.exception.BusinessException;
+import com.ayfox.web.common.exception.ErrorCode;
+import com.ayfox.web.model.entity.system.User;
 import com.ayfox.web.model.enums.UserRoleEnum;
-import com.ayfox.web.service.UserService;
+import com.ayfox.web.service.system.AuthService;
+import com.ayfox.web.service.system.UserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -28,6 +29,9 @@ public class AuthInterceptor {
     @Resource
     private UserService userService;
 
+    @Resource
+    private AuthService authService;
+
     /**
      * 执行拦截
      *
@@ -38,10 +42,8 @@ public class AuthInterceptor {
     @Around("@annotation(authCheck)")
     public Object doInterceptor(ProceedingJoinPoint joinPoint, AuthCheck authCheck) throws Throwable {
         String mustRole = authCheck.mustRole();
-        RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
-        HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
         // 当前登录用户
-        User loginUser = userService.getLoginUser(request);
+        User loginUser = authService.getLoginUser();
         // 必须有该权限才通过
         if (StrUtil.isNotBlank(mustRole)) {
             UserRoleEnum mustUserRoleEnum = UserRoleEnum.getEnumByValue(mustRole);
