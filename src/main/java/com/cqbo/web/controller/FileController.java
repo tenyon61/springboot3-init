@@ -13,7 +13,7 @@ import com.cqbo.web.manager.MinioManager;
 import com.cqbo.web.model.dto.file.UploadFileRequest;
 import com.cqbo.web.model.entity.User;
 import com.cqbo.web.model.enums.FileUploadBizEnum;
-import com.cqbo.web.service.system.AuthService;
+import com.cqbo.web.service.UserService;
 import io.minio.StatObjectResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,15 +36,13 @@ public class FileController {
     Logger logger = LoggerFactory.getLogger(FileController.class);
 
     @Resource
-    private AuthService authService;
-
-    @Resource
     private MinioManager minioManager;
 
     @Resource
     private MinioClientConfig minioClientConfig;
 
-
+    @Resource
+    private UserService userService;
 
     /**
      * 文件上传
@@ -61,7 +59,7 @@ public class FileController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         validFile(multipartFile, fileUploadBizEnum);
-        User loginUser = authService.getLoginUser();
+        User loginUser = userService.getLoginUser();
         // 文件目录：根据业务、用户来划分
         String uuid = RandomUtil.randomString(8);
         String filename = uuid + "-" + multipartFile.getOriginalFilename();
