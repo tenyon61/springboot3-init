@@ -1,7 +1,7 @@
 # 公共配置文件
 server:
   address: 0.0.0.0
-  port: 8101
+  port: 8100
   servlet:
     context-path: /
     # cookie 30 天过期
@@ -54,11 +54,6 @@ spring:
           max-idle: 5
           min-idle: 0
           max-active: 20
-# 日志持久化
-log:
-  folder: D:/tmp/web
-  root:
-    level: info
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
@@ -78,6 +73,12 @@ s3:
     secretKey: ${s3.minio.secretKey}
     endpoint: ${s3.minio.endpoint}
     bucket: ${s3.minio.bucket}
+  cos:
+    secretId: xxx
+    secretKey: xxx
+    host: xxx
+    bucket: xxx
+    region: xxx
 # springdoc-openapi项目配置
 springdoc:
   swagger-ui:
@@ -96,3 +97,8 @@ knife4j:
   production: false
   setting:
     language: zh_cn
+# 日志持久化
+log:
+  folder: D:/tmp/web
+  root:
+    level: info

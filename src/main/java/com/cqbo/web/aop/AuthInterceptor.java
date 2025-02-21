@@ -6,7 +6,7 @@ import com.cqbo.web.exception.BusinessException;
 import com.cqbo.web.exception.ErrorCode;
 import com.cqbo.web.model.entity.User;
 import com.cqbo.web.model.enums.UserRoleEnum;
-import com.cqbo.web.service.system.AuthService;
+import com.cqbo.web.service.UserService;
 import jakarta.annotation.Resource;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class AuthInterceptor {
 
     @Resource
-    private AuthService authService;
+    private UserService userService;
 
     /**
      * 执行拦截
@@ -35,7 +35,7 @@ public class AuthInterceptor {
     public Object doInterceptor(ProceedingJoinPoint joinPoint, AuthCheck authCheck) throws Throwable {
         String mustRole = authCheck.mustRole();
         // 当前登录用户
-        User loginUser = authService.getLoginUser();
+        User loginUser = userService.getLoginUser();
         // 必须有该权限才通过
         if (StrUtil.isNotBlank(mustRole)) {
             UserRoleEnum mustUserRoleEnum = UserRoleEnum.getEnumByValue(mustRole);

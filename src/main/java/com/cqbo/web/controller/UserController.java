@@ -37,7 +37,7 @@ import java.util.List;
  */
 @Tag(name = "UserController", description = "用户管理接口")
 @RestController
-@RequestMapping("/api/sys/user")
+@RequestMapping("/api/user")
 public class UserController {
     Logger logger = LoggerFactory.getLogger(UserController.class);
 
