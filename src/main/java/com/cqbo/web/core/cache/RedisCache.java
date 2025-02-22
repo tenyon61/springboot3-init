@@ -1,4 +1,4 @@
-package com.cqbo.web.manager;
+package com.cqbo.web.core.cache;
 
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
  * @date 2024/11/22
  */
 @Component
-public class RedisManager<V> {
-    private static final Logger logger = LoggerFactory.getLogger(RedisManager.class);
+public class RedisCache<V> {
+    private static final Logger logger = LoggerFactory.getLogger(RedisCache.class);
 
     @Resource
     private RedisTemplate<String, V> redisTemplate;

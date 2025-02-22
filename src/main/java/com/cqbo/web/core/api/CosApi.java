@@ -1,4 +1,4 @@
-package com.cqbo.web.manager;
+package com.cqbo.web.core.api;
 
 import com.cqbo.web.config.CosClientConfig;
 import com.qcloud.cos.COSClient;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 
 @Component
-public class CosManager {
+public class CosApi {
 
     @Resource
     private CosClientConfig cosClientConfig;
