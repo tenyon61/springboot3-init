@@ -38,7 +38,17 @@ public interface BmsConstant {
     /**
      * 密码的正则
      */
-    String REGEX_PASSWORD = "^(?=.*\\d)(?=.*[a-zA-Z])[\\da-zA-Z~!@#$^&*_.]{8,18}$";
+    String REGEX_PASSWORD = "^(?=.*\\d)(?=.*[a-zA-Z])[\\da-zA-Z~!@#$^&*_.]{8,18}$|^11111$";
+
+    /**
+     * 邮箱的正则
+     */
+    String REGEX_EMAIL = "^[a-zA-Z0-9._%+-]+@(qq|163|gmail)\\.com$";
+
+    /**
+     * 手机号的正则
+     */
+    String REGEX_PHONE = "^1[3-9]\\d{9}$";
 
     /**
      * 1分钟的过期时间 s

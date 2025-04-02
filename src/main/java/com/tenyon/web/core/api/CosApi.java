@@ -1,12 +1,12 @@
 package com.tenyon.web.core.api;
 
-import com.tenyon.web.config.CosClientConfig;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.model.GetObjectRequest;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.model.ciModel.persistence.PicOperations;
+import com.tenyon.web.config.CosClientConfig;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 

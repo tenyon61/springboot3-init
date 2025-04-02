@@ -1,11 +1,11 @@
 package com.tenyon.web.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.tenyon.web.model.dto.user.UserQueryRequest;
 import com.tenyon.web.model.entity.SysUser;
 import com.tenyon.web.model.vo.user.LoginUserVO;
 import com.tenyon.web.model.vo.user.SysUserVO;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 

@@ -1,9 +1,10 @@
 package com.tenyon.web.controller;
 
-import com.tenyon.web.common.BaseResponse;
-import com.tenyon.web.common.DeleteRequest;
-import com.tenyon.web.common.ResultUtils;
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tenyon.web.annotation.AuthCheck;
+import com.tenyon.web.common.BaseResponse;
+import com.tenyon.web.common.ResultUtils;
 import com.tenyon.web.constant.BmsConstant;
 import com.tenyon.web.constant.UserConstant;
 import com.tenyon.web.exception.BusinessException;
@@ -16,12 +17,10 @@ import com.tenyon.web.model.dto.user.UserUpdateRequest;
 import com.tenyon.web.model.entity.SysUser;
 import com.tenyon.web.model.vo.user.SysUserVO;
 import com.tenyon.web.service.SysUserService;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +38,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-    Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Resource
     private SysUserService sysUserService;
@@ -49,32 +47,27 @@ public class UserController {
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     @Operation(summary = "创建用户")
     @PostMapping("/add")
-    public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest) {
+    public BaseResponse<Long> addUser(@RequestBody @Valid UserAddRequest userAddRequest) {
         if (userAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         SysUser sysUser = new SysUser();
-        BeanUtils.copyProperties(userAddRequest, sysUser);
+        BeanUtil.copyProperties(userAddRequest, sysUser);
         // 默认密码 11111
-        String defaultPassword = "11111";
-        String encryptPassword = DigestUtils.md5DigestAsHex((BmsConstant.ENCRYPT_SALT + defaultPassword).getBytes());
+        String encryptPassword = DigestUtils.md5DigestAsHex((BmsConstant.ENCRYPT_SALT + "11111").getBytes());
         sysUser.setUserPassword(encryptPassword);
-
         boolean res = sysUserService.save(sysUser);
-        ThrowUtils.throwIf(!res, ErrorCode.OPERATION_ERROR);
+        ThrowUtils.throwIf(!res, ErrorCode.OPERATION_ERROR, "保存失败");
         return ResultUtils.success(sysUser.getId());
     }
 
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     @Operation(summary = "删除用户")
-    @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest) {
-        if (deleteRequest == null || deleteRequest.getId() <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        boolean res = sysUserService.removeById(deleteRequest.getId());
+    @DeleteMapping("/delete/{id}")
+    public BaseResponse<Boolean> deleteUser(@PathVariable long id) {
+        boolean res = sysUserService.removeById(id);
         ThrowUtils.throwIf(!res, ErrorCode.OPERATION_ERROR);
-        return ResultUtils.success(res);
+        return ResultUtils.success(true);
     }
 
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
