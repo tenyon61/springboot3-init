@@ -130,7 +130,7 @@ CREATE TABLE `sys_role`
 INSERT INTO `sys_role`
 VALUES (1, 'admin', '系统管理员', NULL, NULL, NULL);
 INSERT INTO `sys_role`
-VALUES (2, 'user', '普通用户', NULL, NULL, NULL);
+VALUES (2, 'sysUser', '普通用户', NULL, NULL, NULL);
 INSERT INTO `sys_role`
 VALUES (3, 'spaceadmin', '空间管理员', NULL, NULL, NULL);
 INSERT INTO `sys_role`
@@ -173,7 +173,7 @@ CREATE TABLE `sys_user`
     `userName`      varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '用户昵称',
     `userAvatar`    varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '用户头像',
     `userProfile`   varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '用户简介',
-    `userRole`      varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'user' COMMENT '用户角色：user/admin/ban',
+    `userRole`      varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'sysUser' COMMENT '用户角色：sysUser/admin/ban',
     `vipNumber`     bigint NULL DEFAULT NULL COMMENT '会员编号',
     `vipCode`       varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '会员兑换码',
     `vipExpireTime` datetime NULL DEFAULT NULL COMMENT '会员过期时间',
@@ -193,19 +193,19 @@ CREATE TABLE `sys_user`
 -- ----------------------------
 INSERT INTO `sys_user`
 VALUES (1, 'user1', '492a65bef0ab2fac75758f004f3eaf35', 'unionId1', 'mpOpenId1', 'user1',
-        'https://api.oss.cqbo.com/tenyon/assets/default.png', '喜欢编程的小白', 'user', NULL, NULL, NULL, NULL, NULL,
+        'https://api.oss.cqbo.com/tenyon/assets/default.png', '喜欢编程的小白', 'sysUser', NULL, NULL, NULL, NULL, NULL,
         '2024-11-28 14:50:35', '2024-11-28 14:50:35', '2025-01-03 19:57:48', 0);
 INSERT INTO `sys_user`
 VALUES (2, 'user2', '492a65bef0ab2fac75758f004f3eaf35', 'unionId2', 'mpOpenId2', 'user2',
-        'https://api.oss.cqbo.com/tenyon/assets/default.png', '全栈开发工程师', 'user', NULL, NULL, NULL, NULL, NULL,
+        'https://api.oss.cqbo.com/tenyon/assets/default.png', '全栈开发工程师', 'sysUser', NULL, NULL, NULL, NULL, NULL,
         '2024-11-28 14:50:35', '2024-11-28 14:50:35', '2025-01-03 19:57:49', 0);
 INSERT INTO `sys_user`
 VALUES (3, 'user3', '492a65bef0ab2fac75758f004f3eaf35', 'unionId3', 'mpOpenId3', 'user3',
-        'https://api.oss.cqbo.com/tenyon/assets/default.png', '前端爱好者', 'user', NULL, NULL, NULL, NULL, NULL,
+        'https://api.oss.cqbo.com/tenyon/assets/default.png', '前端爱好者', 'sysUser', NULL, NULL, NULL, NULL, NULL,
         '2024-11-28 14:50:35', '2024-11-28 14:50:35', '2025-01-03 19:57:50', 0);
 INSERT INTO `sys_user`
 VALUES (4, 'user4', '492a65bef0ab2fac75758f004f3eaf35', 'unionId4', 'mpOpenId4', 'user4',
-        'https://api.oss.cqbo.com/tenyon/assets/default.png', '后端开发工程师', 'user', NULL, NULL, NULL, NULL, NULL,
+        'https://api.oss.cqbo.com/tenyon/assets/default.png', '后端开发工程师', 'sysUser', NULL, NULL, NULL, NULL, NULL,
         '2024-11-28 14:50:35', '2024-11-28 14:50:35', '2025-01-03 19:57:50', 0);
 INSERT INTO `sys_user`
 VALUES (5, 'admin', '492a65bef0ab2fac75758f004f3eaf35', NULL, NULL, 'admin123',

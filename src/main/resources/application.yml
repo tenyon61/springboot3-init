@@ -1,7 +1,7 @@
 # 公共配置文件
 server:
   address: 0.0.0.0
-  port: 8100
+  port: 8072
   servlet:
     context-path: /
     # cookie 30 天过期
@@ -90,7 +90,7 @@ springdoc:
   group-configs:
     - group: 'default'
       paths-to-match: '/**'
-      packages-to-scan: com.cqbo.web.controller
+      packages-to-scan: com.tenyon.web.controller
 # knife4j的增强配置
 knife4j:
   enable: true
